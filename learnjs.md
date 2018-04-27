@@ -1,6 +1,9 @@
-<h2> javascript 高级程序设计</h2>
-<h3>函数<br>4.8</h3>
-<li>递归</li>
+##  javascript 高级程序设计 ##
+
+### 函数<br>4.8 ###
+
++ 递归
+
 ```javascript
 function factorial (num) {
     if(num <= 1){
@@ -21,7 +24,8 @@ var factorial = (function f(num) {
 */
 ```
 
-<li>闭包</li>
++ 闭包
+
 ```javascript
 function createComparisonFunction(propertyName){
     return function (object1,object2){
@@ -135,7 +139,8 @@ function outputNumbers(count){
 }
 ```
 
-<li>私有变量</li>
++ 私有变量
+
 ```javascript
 // 构造函数中定义特权方法
 var privateVariable = 10;
@@ -284,19 +289,15 @@ var application = function(){
 	return app;
 }();
 ```
-<h3>4.13</h3>
+### 4.13
 
-<li>Q：正则表达式<br>
-
-A：字符串匹配的模式，用来检查一个串是否含有某种子串，将匹配的子串替换或者从某个串中取出某个条件的子串等
-
-</li>
-
-<li>Q：iframe富文本编辑</li>
++ Q：正则表达式
++ A：字符串匹配的模式，用来检查一个串是否含有某种子串，将匹配的子串替换或者从某个串中取出某个条件的子串等
++ Q：iframe富文本编辑
 
 
 
-<h3>Eloquent_Javascript</h3>
+### Eloquent_Javascript ###
 
 Abstract the functions, not reliable on others
 
@@ -1052,6 +1053,88 @@ function
 
     + Assertions
 
-+ Regular expressions
++ Regular expressions (正则表达式)
 
-  + ​
+  + test
+
+  + ```js
+    console.log(/abc/.test("abcde"));
+
+    console.log(/abc/.test("abxde"));
+
+    console.log(/[0123456789]/.test("in 2018"));
+
+    console.log(/[0-9]/.test("in 2018"));
+
+    let notBinary = /[^01]/;
+    console.log(notBinary.test("123"));
+
+    console.log(/'\d+'/.test("'123'"));
+
+    console.log(/'\d*\'/.test("''"))
+
+    let neighbor = /neighbou?r/;
+    conosle.log(neighbor.test("neighbor"))
+
+    let dateTime = /\d{1,2}-\d{1,2}-\d{4} \d{1,2}:\d{2}/;
+    console.log(dateTime.test("30-1-2003 8:45"));
+    ```
+
+  + grouping subexpressions
+
+  + ```js
+    // /bo(o+)(ho(o+))+/i(upper & lower)
+    let cartoonCrying = /boo+(hoo+)+/i;
+    ```
+
+  + matches & groups
+
+  + ```js
+    // execute
+    let match = /\d+/.exec("one two 100");
+    // array
+    console.log(match);
+    // index
+    console.log(match.index);
+
+    // match method in String
+    console.log("one two 100".match(/\d+/));
+    // "100"
+
+    let quotedText = /'([^']*)'/;
+    console.log(quotedText.exec("she said 'hello'"));
+    // ["'hello'", "hello"]
+    // /'([^']*)'/, /'()'/, /[^']*/, ...
+
+    // not end up being matched
+
+    // two groups
+    console.log(/bad(ly)?/.exec("bad"));
+    // ["bad",undefined];
+
+    // two groups
+    console.log(/(\d)+/.exec("123"));
+    // ["123", "3"];
+
+    ```
+
+  + date class
+
+  + ```js
+    function getDate(string) {
+        let [_, day, month, year] = 
+            /(\d{1, 2})-(\d{1-2})-(\d{4})/.exec(string);
+        return new Date(year, month - 1, day);
+    }
+    ```
+
+  + word and string boundaries
+
+  + choice patterns
+
+  + ```js
+    let animalCount = /\b\d+ (pig|cow|chicken)s?\b/;
+    console.log(animalCount.test("15 pigs"));
+    ```
+
+    ​
