@@ -612,6 +612,7 @@ function
 
     console.log(okIterator.next());
     // {value: undefined, done: true}
+    ```
 
 
     class Matrix {
@@ -661,16 +662,16 @@ function
             return {value, done: false};
         }
     }
-
+    
     // return object value{x, y, value};
     let matrix = new Matrix(2,2,(x,y) => `value ${x}. ${y}`);
     for (let {x, y, value} of matrix) {
         console.log(x,y,value);
     }
     ```
-
+    
     + getters, setters, statics
-
+    
     ```js
     // get
     let varyingSize = {
@@ -678,9 +679,9 @@ function
     		return Math.floor(Math.random() * 100);
         }
     };
-
+    
     console.log(varyingSize.size);
-
+    
     // set
     class Temperature {
     	constructor(celsius) {
@@ -697,7 +698,7 @@ function
     		return new Temperature((value - 32) / 1.8);
         }
     }
-
+    
     let temp = new Temperature(22);
     // get fahrenheit
     console.log(temp.fahrenheit);
@@ -707,7 +708,7 @@ function
     // static: to create a temperature using degrees Fahrenheit
     Temperature.fromFahrenheit(100);
     ```
-
+    
     + Inheritance
 
   + ```js
@@ -733,3 +734,324 @@ function
     ```
 
     ​
+
++ Project
+
+  + ```js
+    const roads = [
+        "Alice's House-Bob's House", "Alice's House-Cabin",
+        "Alice's House-Post Office", "Bob's House-Town Hall",
+        "Daria's House-Ernie's House", "Daria's House=Town Hall", "Ernie's House-Grete's House", "Grete's House-Farm", "Grete's House-Shop", "Marketplace-Farm",
+        "Marketplace-Post Office", "Marketplace-Shop",
+        "Marketplace-Town Hall", "Shop-Town Hall"
+    ];
+
+    function buildGraph(edges) {
+    	let graph = Object.create(null);
+        function addEdge(from, to) {
+    		if (graph[from] == null) {
+    			graph[from] = [to];
+            } else {
+    			graph[from].push[to];
+            }
+        }
+        for (let [from, to] of edges.map(r => r.split("-"))) {
+            // 建立双向关系
+            addEdge(from, to);
+            addEdge(to, from);
+    	}
+        return graph;
+    }
+
+    const roadGraph = buildGraph(roads);
+
+    class VillageState {
+    	constructor(place, parcels) {
+    		this.place = place;
+            this.parcels = parcels;
+        }
+        
+        move(destination) {
+    		if(!roadGraph[this.place].includes(destination)) {
+    			return this;
+            } else {
+    			let parcels = this.parcels.map(p => {
+    				if(p.place != this.place) return p;
+                    return {place: destination, address: p.address};
+                }).filter(p => p.place != p.address);
+                return new VillageState(destination, parcels);
+            }
+        }
+    }
+
+    /* let first = new VillageState(
+    	"Post Office",
+        [{place: "Post Office", address: "Alice's House"}]
+    );
+    let next = first.move("Alice's House"); */
+
+    function runRobot(state, robot, memory) {
+    	for(let turn = 0;;turn++) {
+    		if(state.parcels.length == 0) {
+    			console.log(`Done in ${turn} turns`)；
+                break;
+            }
+            let action = robot(state, memory);
+            state = state.move(action.direction);
+            memory = action.memory;
+            console.log(`Move to ${action.direction}`);
+        }
+    }
+
+    function randomPick(array) {
+        let choice = Math.floor(Math.random() * array.length);
+        return array[choice];
+    }
+
+    function randomRobot(state) {
+    	return {direction: randomPick(roadGraph[state.place])};
+    }
+
+    VillageState.random = function(parcelCount = 5) {
+    	let parcels = [];
+        for (let i = 0; i < parcelCount; i++) {
+    		let address = randomPick(Object.keys(roadGraph));
+            let place;
+            do {
+    			place = randomPick(Object.keys(roadGraph))
+            } while (place == address);
+            parcels.push({place, address});
+        }
+        return new VillageState("Post Office", parcels);
+    }
+
+    runRobot(VillageState.random(),randomRobot);
+
+    const mailRoute = [
+        "Alice's House", "Cabin", "Alice's House", "Bob's House",
+        "Town Hall", "Daria's House", "Ernie's House",
+        "Grete's House","Shop", "Grete's House", "Farm",
+        "Markteplace", "Post Office"
+    ];
+
+    function routeRobot(state, memory) {
+        if(memory.length == 0) {
+    		memory = mailRoute;
+        }
+        return {direction: memory[0], memory: memory.slice(1)};
+    }
+
+    function findRoute(graph, from, to) {
+    	let work = [{at: from, route: []}];
+        for (let i = 0; i < work.lenght; i++) {
+    		let{at, route} = work[i];
+            for (let place of graph[at]) {
+    			if (place == to) return route.concat(place);
+                if(!work.some(w => w.at == place)) {
+    				work.push({at: place, route: route.concat(place)});
+                }
+            }
+        }
+    }
+
+    function goalOrientedRobot({place, parcels}, route) {
+        if(route.length == 0) {
+    		let parcel = parcel[0];
+            if (parcel.place != place) {
+    			route = findRoute(roadGraph, place, parcel.place);
+            } else {
+    			route = findRoute(roadGraph, place, parcel.address);
+            }
+        }
+        return {direction: route[0], memory: route.slice(1)}
+    }
+    ```
+
+  + Debug
+
+    + "use strict"
+
+    + ```js
+      function canYouSpotProblem() {
+          "use strict";
+          for(counter = 0; counter < 10; counter++) {
+              console.log("Happy happy");
+          }
+      }
+      canYouSpotProblem();
+      // counter is not defined
+
+      "use strict"
+      function Person(name) { this.name = name; }
+      let ferdinand = Person("Ferdinand");
+      console.log(name);
+      // this global scope object;
+      ```
+
+    + types
+
+    + testing
+
+    + debugging
+
+    + ```jsx
+      function numberToString(n, base = 10) {
+          let result = "", sign = "";
+          if(n < 0) {
+              sign = "-";
+              n = -n;
+          }
+          do{
+              result = String(n % base) + result;
+              n /= base;
+          } while(n > 0);
+          return sign + result;
+      }
+      console.log(numberToString(13, 10));
+      ```
+
+      ​
+
+    + Error propagation
+
+    + ```js
+      function promptNumber(question) {
+          let result = Number(prompt(question));
+          if (isNaN(result)) return null;
+          else return result;
+      }
+
+      function lastElement(array) {
+          if (array.length == 0) {
+              return {failed: true};
+          } else {
+              return {element: array[array.length - 1]}
+          }
+      }
+      ```
+
+    + Exceptions
+
+    + ```js
+      function promptDirection(question) {
+          let result = prompt(question);
+          if (result.toUpperCase() == "left") return "L";
+          if (result.toUpperCase() == "right") return "R";
+          throw new Error("Invalid direction: " + result);
+      }
+      function look() {
+          if (promptDirection("Which way?") == "L") {
+              return "a house"
+          } else {
+      		return "two angry bears"
+          }
+      }
+
+      try {
+          console.log("You see", look());
+      } catch(error) {
+          console.log("Something went wrong: " + error);
+      }
+      ```
+
+    + Cleaning up after exceptions
+
+      ```js
+      const accounts = {
+      	a: 100,
+          b: 0,
+          c: 20
+      }
+      function getAccount() {
+      	let accountName = prompt("Enter an account name");
+          if(!accounts.hasOwnProperty(accountName)) {
+      		throw new Error(`No such account: ${accountName}`);
+          }
+          return accountName;
+      }
+      function transfer(from, amount) {
+      	if(accounts[from] < amount) return;
+          accounts[from] -= amount;
+          accounts[getAccount()] += amount;
+          /* if getAccount throw an error, the money will disappear
+          	Solution 1: first accounts[getAccount()] += money; 
+          	then accounts[from] -= amount
+          	
+          	Maybe other problems may happen
+          	
+          	Solution 2: try{...} catch{...} 
+          	catch error after transfer */ 
+      }
+      ```
+
+    + ```js
+      function transfer(from, amount) {
+          if (accounts[from] < amount) return;
+          let progress = 0;
+          try {
+              accounts[from] -= amount;
+              progress = 1;
+              accounts[getAccount()] += amount;
+              progress = 2;
+          } finally {
+              if (progress == 1) {
+                  accounts[from] += amount;
+              }
+          }
+      }
+      ```
+
+    + Selective catching
+
+    + ```js
+      function promptDirection(question) {
+          let result = prompt(question);
+          if (result.toUpperCase() == "left") return "L";
+          if (result.toUpperCase() == "right") return "R";
+          throw new Error("Invalid direction: " + result);
+      }
+      for(;;) {
+          try {
+              let dir = promptDirection("Where?");
+              console.log("You chose", dir);
+              break;
+          } catch(e) {
+              /* ignore other errors, 
+              only catch error of invalid prompt */
+              console.log("Not a valid direction. Try again")
+          }
+      }
+      ```
+
+    + ```js
+      class InputError extends Error{}
+
+      function promptDirection(question) {
+      	let result = prompt(question);
+          if (result.toLowerCase() == "left") return "L";
+          if (result.toLowerCase() == "right") return "R";
+          throw new InputError("Invalid direction:" + result);
+      }
+
+      for (;;) {
+          try {
+              let dir = promptDirection("Where?");
+              console.log("You chose", dir);
+              break;
+          } catch (e){
+              // e: Error
+              if(e instanceof InputError) {
+                  console.log("Not a valid direciton. Try again");
+              } else {
+                  throw e;
+              }
+              
+      	}
+      }
+      ```
+
+    + Assertions
+
++ Regular expressions
+
+  + ​
