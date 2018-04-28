@@ -616,101 +616,103 @@ function
     ```
 
 
-    class Matrix {
-        constructor(width, height, content = (x, y) => undefined) {
-            this.width = width;
-            this.height = height;
-            this.content = [];
-            
-            for (let y = 0; y < height; y++) {
-    			for (let x = 0; x < width; x++) {
-    				this.content[y * width + x] = content(x,y);
-                }
+~~~js
+class Matrix {
+    constructor(width, height, content = (x, y) => undefined) {
+        this.width = width;
+        this.height = height;
+        this.content = [];
+        
+        for (let y = 0; y < height; y++) {
+			for (let x = 0; x < width; x++) {
+				this.content[y * width + x] = content(x,y);
             }
-            [Symbol.iterator] = function() {
-        return new MatrixIterator(this);
-    }
         }
+        [Symbol.iterator] = function() {
+    return new MatrixIterator(this);
+}
+    }
+    
+    get(x, y) {
+		return this.content[y * this.width + x];
+    }
+    set(x, y, value) {
+		this.content[y * this.width + x] = value;
+    }
+}
+// matrix 为 Matrix 的实例
+class MatrixIterator {
+    constructor(matrix) {
+        this.x = 0;
+        this.y = 0;
+        this.matrix = matrix;
+    }
+    
+    next() {
+        if (this.y == this.matrix.height) return{done:true};
         
-        get(x, y) {
-    		return this.content[y * this.width + x];
+        let value = {
+			x: this.x,
+            y: this.y,
+            value: this.matrix.get(this.x,this.y)
+        };
+        this.x++;
+        if (this.x == this.matrix.width) {
+			this.x = 0;
+            this.y++;
         }
-        set(x, y, value) {
-    		this.content[y * this.width + x] = value;
-        }
+        return {value, done: false};
     }
-    // matrix 为 Matrix 的实例
-    class MatrixIterator {
-        constructor(matrix) {
-            this.x = 0;
-            this.y = 0;
-            this.matrix = matrix;
-        }
-        
-        next() {
-            if (this.y == this.matrix.height) return{done:true};
-            
-            let value = {
-    			x: this.x,
-                y: this.y,
-                value: this.matrix.get(this.x,this.y)
-            };
-            this.x++;
-            if (this.x == this.matrix.width) {
-    			this.x = 0;
-                this.y++;
-            }
-            return {value, done: false};
-        }
+}
+
+// return object value{x, y, value};
+let matrix = new Matrix(2,2,(x,y) => `value ${x}. ${y}`);
+for (let {x, y, value} of matrix) {
+    console.log(x,y,value);
+}
+```
+
++ getters, setters, statics
+
+```js
+// get
+let varyingSize = {
+	get size() {
+		return Math.floor(Math.random() * 100);
     }
-    
-    // return object value{x, y, value};
-    let matrix = new Matrix(2,2,(x,y) => `value ${x}. ${y}`);
-    for (let {x, y, value} of matrix) {
-        console.log(x,y,value);
+};
+
+console.log(varyingSize.size);
+
+// set
+class Temperature {
+	constructor(celsius) {
+		this.celsius = celsius;
     }
-    ```
-    
-    + getters, setters, statics
-    
-    ```js
-    // get
-    let varyingSize = {
-    	get size() {
-    		return Math.floor(Math.random() * 100);
-        }
-    };
-    
-    console.log(varyingSize.size);
-    
-    // set
-    class Temperature {
-    	constructor(celsius) {
-    		this.celsius = celsius;
-        }
-        get fahrenheit() {
-            return this.celsius * 1.8 + 32;
-        }
-        set fahrenheit(value) {
-    		this.celsius = (value - 32) / 1.8;
-        }
-        
-        static fromFahrenheit(value) {
-    		return new Temperature((value - 32) / 1.8);
-        }
+    get fahrenheit() {
+        return this.celsius * 1.8 + 32;
+    }
+    set fahrenheit(value) {
+		this.celsius = (value - 32) / 1.8;
     }
     
-    let temp = new Temperature(22);
-    // get fahrenheit
-    console.log(temp.fahrenheit);
-    // set fahrenheit
-    temp.fahrenheit = 86;
-    console.log(temp.celsius);
-    // static: to create a temperature using degrees Fahrenheit
-    Temperature.fromFahrenheit(100);
-    ```
-    
-    + Inheritance
+    static fromFahrenheit(value) {
+		return new Temperature((value - 32) / 1.8);
+    }
+}
+
+let temp = new Temperature(22);
+// get fahrenheit
+console.log(temp.fahrenheit);
+// set fahrenheit
+temp.fahrenheit = 86;
+console.log(temp.celsius);
+// static: to create a temperature using degrees Fahrenheit
+Temperature.fromFahrenheit(100);
+```
+
++ Inheritance
+~~~
 
   + ```js
     class SymmetricMatrix extends Matrix {

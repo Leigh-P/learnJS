@@ -1,56 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>banner_demo</title>
+    <script src="data/data.js"></script>
     <style>
-    body {
-        margin: 0;
-        padding: 0;
-    }
-    .banner {
-        width: 600px;
-        height: 500px;
-        margin: 0 auto;
-        box-shadow: 0 0 0 rgba(0, 0, 0, .5);
-    }
-    .img-box {
-        width: 100%;
-        height: 500px;
-        background-color: #d3d3d3;
-        opacity: .1;
-    }
-    .button {
-        margin: 0 auto;
-        margin-top: -50px;
-        width: 200px;
-        height: 50px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 1;
-    }
-    .circle {
-        display: inline-block;
-        background-color: lightgray;
-        width: 10px;
-        height: 10px;
-        border-radius: 50px;
-        margin-right: 10px;
-    }
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .banner {
+            width: 500px;
+            height: 300px;
+            margin: 0 auto;
+            box-shadow: 0 0 0 rgba(0, 0, 0, .5);
+        }
+
+        .img-box {
+            width: 100%;
+            height: 100%;
+        }
+
+        .button {
+            margin: 0 auto;
+            margin-top: -50px;
+            width: 200px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
+        }
+
+        .circle {
+            display: inline-block;
+            background-color: lightgray;
+            width: 10px;
+            height: 10px;
+            border-radius: 50px;
+            margin-right: 10px;
+        }
+        .circle.on {
+            background-color: #ffffff;
+        }
+
+        #img {
+            width: 100%;
+            height: 100%;
+        }
     </style>
 </head>
+
 <body>
     <div class="banner">
-        <div class="img-box"></div>
+        <div class="img-box">
+            <img id="img" src="" alt="">
+        </div>
         <div class="button">
-            <span class="circle"></span>
-            <span class="circle"></span>
-            <span class="circle"></span>
-            <span class="circle"></span>
+            <a href="javascript:void(0)" class="circle"></a>
+            <a href="javascript:void(0)" class="circle"></a>
+            <a href="javascript:void(0)" class="circle"></a>
+            <a href="javascript:void(0)" class="circle"></a>
         </div>
     </div>
+    <script src="scripts/main.js"></script>
+    <script src="scripts/image.js"></script>
 </body>
+
 </html>
